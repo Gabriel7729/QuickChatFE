@@ -1,0 +1,43 @@
+.center-div {
+  /* Apply this class to your container */
+  height: 100vh;
+  /* Make the container take full viewport height */
+  display: flex;
+  /* Use flexbox for easy centering */
+  align-items: center;
+  /* Vertically center content */
+  justify-content: center;
+  /* Horizontally center content */
+}
+
+.noFocusOutline {
+  outline: none;
+  border: none;
+}
+
+.noFocusOutline:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+  /* Remove any shadow if present */
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable :hover {
+  background-color: #f0f0f0;
+}
+
+.notHoverable {
+  pointer-events: none;
+}
+
+.stats-grid-card {
+  transition: all 0.2s ease-out;
+}
+
+.stats-grid-card:hover {
+  transform: scale(1.05);
+}

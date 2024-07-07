@@ -1,0 +1,57 @@
+.control {
+    font-weight: 400;
+    display: block;
+    width: 100%;
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+    color: gray;
+    font-size: var(--mantine-font-size-sm);
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.control:hover {
+    color: white;
+}
+
+.openedControl {
+    color: white;
+}
+
+.active {
+    color: #F18835;
+}
+
+.link {
+    font-weight: 400;
+    display: block;
+    text-decoration: none;
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+    padding-left: var(--mantine-spacing-xl);
+    margin-left: var(--mantine-spacing-sm);
+    margin-right: var(--mantine-spacing-sm);
+    margin-bottom: var(--mantine-spacing-sm);
+    border-radius: 5px;
+    font-size: var(--mantine-font-size-sm);
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+    cursor: pointer;
+}
+
+.activeLink {
+    background-color: #283848;
+}
+
+.chevron {
+    transition: transform 200ms ease;
+}
+
+.noFocusOutline {
+    outline: none;
+    border: none;
+}
+
+.noFocusOutline:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+    /* Remove any shadow if present */
+}
