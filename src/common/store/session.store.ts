@@ -1,16 +1,13 @@
 import { create } from "zustand";
 import { createJSONStorage, persist, PersistOptions } from "zustand/middleware";
 import { LoginResponse } from "../../models/auth/auth.model";
-import { BranchResponseDto } from "../../models/branch/branch.model";
 
 export type AuthUser = {
   claims: LoginResponse | null;
-  branchSelected: BranchResponseDto | null;
 };
 
 export type AuthUserActions = {
   setClaims: (claims: LoginResponse) => void;
-  setBranchSelected: (branchSelected: BranchResponseDto) => void;
   logout: () => void;
 };
 
@@ -26,8 +23,6 @@ export const useAuthStore = create<State>(
     (set) => ({
       claims: null,
       setClaims: (claims: LoginResponse) => set({ claims }),
-      branchSelected: null,
-      setBranchSelected: (branchSelected: BranchResponseDto) => set({ branchSelected }),
       logout: () => set({ claims: null }),
     }),
     {
