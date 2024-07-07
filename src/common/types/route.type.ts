@@ -1,16 +1,8 @@
-// src/types.ts
-export interface RouteLink {
-  label: string;
-  link: string;
-  element: React.ComponentType;
-  notShowInMenu?: boolean;
-  public?: boolean;
-}
+import { IconMessage } from "@tabler/icons-react";
 
 export interface RouteConfig {
   label: string;
-  icon: React.FC<any>;
-  initiallyOpened: boolean;
-  accessRoles: string[];
-  links: RouteLink[];
+  icon: typeof IconMessage;
+  link: string;
+  element: React.ComponentType;
 }

@@ -41,3 +41,10 @@
 .stats-grid-card:hover {
   transform: scale(1.05);
 }
+
+.action {
+  border-radius: 100px;
+  &:hover {
+      background-color: #EDEFF5;
+    }
+}
