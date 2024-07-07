@@ -4,10 +4,11 @@ export type LoginRequest = {
 };
 
 export type LoginResponse = {
-  branchId: string;
   userId: string;
-  userName: string;
+  name: string;
+  lastName: string;
+  phoneNumber: string;
   email: string;
-  role: string;
+  isEmailValidated: boolean;
   token: string;
 };

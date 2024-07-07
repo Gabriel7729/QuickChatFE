@@ -1,5 +1,13 @@
 import { UserRole } from "../../common/enums/user.enum";
 
+export interface UserDto {
+  name: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  password: string;
+}
+
 export interface UserResponseDto {
   id: string;
   name: string;

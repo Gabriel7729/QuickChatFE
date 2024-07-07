@@ -3,7 +3,7 @@ export const styleDefaultMantine = {
     TextInput: {
       styles: {
         label: {
-          color: "#085b68",
+          //color: "#228BE6",
           marginBottom: "7px",
         },
       },
@@ -11,7 +11,7 @@ export const styleDefaultMantine = {
     NumberInput: {
       styles: {
         label: {
-          color: "#085b68",
+          //color: "#228BE6",
           marginBottom: "7px",
         },
       },
@@ -19,7 +19,7 @@ export const styleDefaultMantine = {
     Select: {
       styles: {
         label: {
-          color: "#085b68",
+          //color: "#228BE6",
           marginBottom: "7px",
         },
       },
@@ -27,7 +27,7 @@ export const styleDefaultMantine = {
     DateInput: {
       styles: {
         label: {
-          color: "#085b68",
+          //color: "#228BE6",
           marginBottom: "7px",
         },
       },
@@ -35,7 +35,7 @@ export const styleDefaultMantine = {
     PasswordInput: {
       styles: {
         label: {
-          color: "#085b68",
+          //color: "#228BE6",
           marginBottom: "7px",
         },
       },
@@ -50,4 +50,15 @@ export const styleDefaultMantine = {
       },
     },
   },
+};
+
+export const Colors = {
+  primary: "#228BE6",
+  secondary: "#F18835",
+  success: "#00A896",
+  danger: "#FF3D71",
+  warning: "#FFAA00",
+  info: "#0077B6",
+  light: "#F8F9FA",
+  dark: "#343A40",
 };
