@@ -3,7 +3,7 @@ export const styleDefaultMantine = {
     TextInput: {
       styles: {
         label: {
-          //color: "#228BE6",
+          color: "#868E9D",
           marginBottom: "7px",
         },
       },
@@ -43,7 +43,7 @@ export const styleDefaultMantine = {
     Modal: {
       styles: {
         title: {
-          color: "#F18835",
+          color: "#228BE6",
           fontWeight: "bold",
           fontSize: "20px",
         },

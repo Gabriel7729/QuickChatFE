@@ -12,7 +12,7 @@ export const PublicRoutes = ({ children }: any) => {
       </Center>
     );
 
-  return !claims?.token ? children : <Navigate to="/" />;
+  return !claims?.token ? children : <Navigate to="/chats" />;
 };
 
 export default PublicRoutes;

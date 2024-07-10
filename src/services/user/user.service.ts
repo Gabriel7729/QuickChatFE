@@ -1,4 +1,9 @@
-import { GeneralResponseModel, ResponseModel } from "../../models/base.model";
+import {
+  GeneralResponseModel,
+  ResponseListModel,
+  ResponseModel,
+} from "../../models/base.model";
+import { ListContactsRequest } from "../../models/contact/contact.model";
 import {
   ChangePasswordDto,
   UserResponseDto,
@@ -22,6 +27,29 @@ class UserService extends BaseService<UserResponseDto> {
 
   public async getUserLogged(): Promise<ResponseModel<UserResponseDto>> {
     const res = await this.api.get<ResponseModel<UserResponseDto>>(`/Logged`);
+    return res.data;
+  }
+
+  public async getContactsFromUser(
+    request: ListContactsRequest
+  ): Promise<ResponseListModel<UserResponseDto>> {
+    const res = await this.api.get<ResponseListModel<UserResponseDto>>(
+      `/${request.userId}/Contacts`, { params: { email: request.email, phoneNumber: request.phoneNumber } }
+    );
+    return res.data;
+  }
+
+  public async getIfUserExists(
+    request: ListContactsRequest
+  ): Promise<ResponseModel<UserResponseDto>> {
+    const res = await this.api.get<ResponseModel<UserResponseDto>>(`/${request.userId}/Exists`, { params: { email: request.email, phoneNumber: request.phoneNumber } });
+    return res.data;
+  }
+  
+  public async createContact(
+    request: ListContactsRequest
+  ): Promise<ResponseModel<UserResponseDto>> {
+    const res = await this.api.post<ResponseModel<UserResponseDto>>(`/AddContact`, request);
     return res.data;
   }
 

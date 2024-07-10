@@ -1,10 +1,23 @@
-import { Text } from "@mantine/core";
+import { useState } from "react";
+import { Flex } from "@mantine/core";
+import ContactsList from "./components/contacts-list/ContactsList";
 
-export const ContactsPage = () => {
+const ContactsPage = () => {
+  const [selectedContact, setSelectedContact] = useState(null);
+
+  const handleContactClick = (Contact: any) => {
+    setSelectedContact(Contact);
+  };
+
   return (
-    <div>
-      <Text size="15px">Contacts</Text>
-    </div>
+    <Flex>
+      <ContactsList onContactClick={handleContactClick} />
+      {/* {selectedContact ? (
+        <ContactMessages Contact={selectedContact} />
+      ) : (
+        <ContactSection />
+      )} */}
+    </Flex>
   );
 };
 

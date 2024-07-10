@@ -1,4 +1,4 @@
-import { UserRole } from "../../common/enums/user.enum";
+import { BaseResponseDto } from "../base.model";
 
 export interface UserDto {
   name: string;
@@ -8,45 +8,11 @@ export interface UserDto {
   password: string;
 }
 
-export interface UserResponseDto {
-  id: string;
+export interface UserResponseDto extends BaseResponseDto {
   name: string;
   lastName: string;
-  userName: string;
-  address: string;
-  idNumber: string;
   phoneNumber: string;
   email: string;
-  role: UserRole;
-  branchesInfo: BranchesInfoDto[];
-}
-
-export interface UserRequest {
-  name: string;
-  lastName: string;
-  userName: string;
-  address: string;
-  idNumber: string;
-  phoneNumber: string;
-  email: string;
-  role: UserRole;
-}
-export interface BranchesInfoDto {
-  id: string;
-  branchName: string;
-  branchMembers: number;
-}
-
-export interface UpdateUserDto {
-  id?: string;
-  name: string;
-  lastName: string;
-  userName: string;
-  address: string;
-  idNumber: string;
-  phoneNumber: string;
-  email: string;
-  role: UserRole;
 }
 
 export interface ChangePasswordDto {

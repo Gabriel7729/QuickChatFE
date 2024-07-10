@@ -11,35 +11,43 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { IconSearch, IconPlus } from "@tabler/icons-react";
-import classes from "./ChatList.module.css";
 import { UserButton } from "../../../../components/user-button/UserButton";
-import { ChatResponseDto } from "../../../../models/chat/chat.model";
-import chatService from "../../../../services/chat/chat.service";
 import { useAuthStore } from "../../../../common/store/session.store";
-import AddChat from "../add-chat/AddChat";
+import userService from "../../../../services/user/user.service";
+import { ListContactsRequest } from "../../../../models/contact/contact.model";
+import { UserResponseDto } from "../../../../models/user/user.model";
+import classes from "./ContactsList.module.css";
 import { useDisclosure } from "@mantine/hooks";
+import AddContact from "../add-contact/AddContact";
 
-interface ChatListProps {
-  onChatClick: (chat: ChatResponseDto) => void;
+interface ContactsListProps {
+  onContactClick: (contact: UserResponseDto) => void;
 }
 
-export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
+export const ContactsList: React.FC<ContactsListProps> = ({
+  onContactClick,
+}) => {
   const [opened, { open, close }] = useDisclosure(false);
-  const [chats, setChats] = useState<ChatResponseDto[]>([]);
+  const [contacts, setContacts] = useState<UserResponseDto[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const { claims } = useAuthStore();
 
-  const fetchChats = async () => {
+  const fetchContacts = async () => {
     try {
-      const { value } = await chatService.getChatsFromUser(claims?.userId!);
-      setChats(value);
+      const request: ListContactsRequest = {
+        userId: claims?.userId!,
+        email: "",
+        phoneNumber: "",
+      };
+      const { value } = await userService.getContactsFromUser(request);
+      setContacts(value);
     } catch (error) {
       console.log("Error fetching Chats", error);
     }
   };
 
   useEffect(() => {
-    fetchChats();
+    fetchContacts();
   }, []);
 
   const handleMenuClick = () => {
@@ -50,31 +58,24 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
     setSearchTerm(event.target.value);
   };
 
-  const getChatName = (chat: ChatResponseDto) => {
-    const participant = chat.participants.find(
-      (user) => user.id !== claims?.userId!
-    );
-    return participant?.name + " " + participant?.lastName;
-  };
-
-  const filteredChats = chats.filter((chat) => {
-    const chatName = getChatName(chat);
-    return chatName.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredContacts = contacts.filter((contact) => {
+    const contactName = contact.name + " " + contact.lastName;
+    return contactName.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   return (
-    <nav className={classes.chatList}>
+    <nav className={classes.contactList}>
       <div className={classes.section}>
         <Flex justify={"space-between"}>
           <Text fw={"500"} size={"xl"}>
-            Chats
+            Contacts
           </Text>
           <UnstyledButton
             style={{ width: rem(35), height: rem(35) }}
             className={"action"}
             onClick={open}
           >
-            <Tooltip label="Start a new Chat" position="right">
+            <Tooltip label="Create a new Contact" position="right">
               <IconPlus
                 color="#637381"
                 style={{ padding: "5px", width: rem(35), height: rem(35) }}
@@ -104,18 +105,18 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
       <div className={classes.section}>
         <Group className={classes.collectionsHeader} justify="space-between">
           <Text size="xs" fw={500} c="dimmed">
-            All Chats
+            All Contacts
           </Text>
         </Group>
         <ScrollArea h={790} type="scroll" scrollHideDelay={500}>
           <Group dir="column" gap="xs" mt={"xs"}>
-            {filteredChats.map((chat) => (
+            {filteredContacts.map((contact) => (
               <UserButton
-                key={chat.id}
-                name={getChatName(chat)}
-                message={chat.lastMessage}
+                key={contact.id}
+                name={contact.name + " " + contact.lastName}
+                message={contact.email}
                 onMenuClick={handleMenuClick}
-                onClick={() => onChatClick(chat)}
+                onClick={() => onContactClick(contact)}
               />
             ))}
           </Group>
@@ -125,13 +126,13 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
         opened={opened}
         onClose={close}
         size={"xl"}
-        title={"Create Chat"}
+        title={"Create Contact"}
         centered
       >
-        <AddChat
-          onChatCreated={() => {
+        <AddContact
+          onContactCreated={() => {
             close();
-            fetchChats();
+            fetchContacts();
           }}
         />
       </Modal>
@@ -139,4 +140,4 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
   );
 };
 
-export default ChatList;
+export default ContactsList;
