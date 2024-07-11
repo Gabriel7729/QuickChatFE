@@ -1,6 +1,6 @@
 import { ResponseListModel, ResponseModel } from "../../models/base.model";
-import { ChatResponseDto, SendMessageRequest, SendMessageResponseDto, StartChatRequest } from "../../models/chat/chat.model";
-import { GroupResponseDto } from "../../models/chat/group.model";
+import { ChatResponseDto, CreateGroupChatRequest, SendMessageRequest, SendMessageResponseDto, StartChatRequest } from "../../models/chat/chat.model";
+import { GroupChatResponseDto, GroupResponseDto } from "../../models/chat/group.model";
 import BaseService from "../base.service";
 
 class ChatService extends BaseService<ChatResponseDto> {
@@ -31,6 +31,13 @@ class ChatService extends BaseService<ChatResponseDto> {
     request: StartChatRequest
   ): Promise<ResponseModel<ChatResponseDto>> {
     const res = await this.api.post<ResponseModel<ChatResponseDto>>(`/Start`, request);
+    return res.data;
+  }
+
+  public async createGroupChat(
+    request: CreateGroupChatRequest
+  ): Promise<ResponseModel<GroupChatResponseDto>> {
+    const res = await this.api.post<ResponseModel<GroupChatResponseDto>>(`/CreateGroup`, request);
     return res.data;
   }
 

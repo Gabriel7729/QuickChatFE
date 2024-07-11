@@ -11,20 +11,20 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { IconSearch, IconPlus } from "@tabler/icons-react";
-import classes from "./ChatList.module.css";
+import classes from "./GroupList.module.css";
 import { UserButton } from "../../../../components/user-button/UserButton";
 import { ChatResponseDto } from "../../../../models/chat/chat.model";
 import chatService from "../../../../services/chat/chat.service";
 import { useAuthStore } from "../../../../common/store/session.store";
-import AddChat from "../add-chat/AddChat";
 import { useDisclosure } from "@mantine/hooks";
 import { useQuery } from "../../../../common/utils/route.utils";
+import AddGroup from "../add-group/AddGroup";
 
-interface ChatListProps {
-  onChatClick: (chat: ChatResponseDto) => void;
+interface GroupListProps {
+  onGroupClick: (chat: ChatResponseDto) => void;
 }
 
-export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
+export const GroupList: React.FC<GroupListProps> = ({ onGroupClick }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [chats, setChats] = useState<ChatResponseDto[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -36,7 +36,8 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
   const fetchChats = async () => {
     try {
       const { value } = await chatService.getChatsFromUser(claims?.userId!);
-      setChats(value.filter((chat) => !chat.isGroupChat));
+      const groups = value.filter((chat) => chat.isGroupChat);
+      setChats(groups);
     } catch (error) {
       console.log("Error fetching Chats", error);
     }
@@ -52,7 +53,7 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
         chat.participants.some((user) => user.id === contactId)
       );
       if (chat) {
-        onChatClick(chat);
+        onGroupClick(chat);
       }
     }
   }, [setChats, query, contactId, chats]);
@@ -63,9 +64,7 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
       const url = window.URL.createObjectURL(new Blob([response]));
       const link = document.createElement("a");
       link.href = url;
-      const chatName = chats
-        .find((chat) => chat.id === chatId)
-        ?.participants.find((user) => user.id !== claims?.userId!)?.name;
+      const chatName = chats.find((chat) => chat.id === chatId)?.groupName;
       link.setAttribute("download", `Chat-${chatName}.pdf`);
       document.body.appendChild(link);
       link.click();
@@ -79,10 +78,7 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
   };
 
   const getChatName = (chat: ChatResponseDto) => {
-    const participant = chat.participants.find(
-      (user) => user.id !== claims?.userId!
-    );
-    return participant?.name + " " + participant?.lastName;
+    return chat.groupName;
   };
 
   const filteredChats = chats.filter((chat) => {
@@ -91,18 +87,18 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
   });
 
   return (
-    <nav className={classes.chatList}>
+    <nav className={classes.GroupList}>
       <div className={classes.section}>
         <Flex justify={"space-between"}>
           <Text fw={"500"} size={"xl"}>
-            Chats
+            Groups
           </Text>
           <UnstyledButton
             style={{ width: rem(35), height: rem(35) }}
             className={"action"}
             onClick={open}
           >
-            <Tooltip label="Start a new Chat" position="right">
+            <Tooltip label="Start a new Group Chat" position="right">
               <IconPlus
                 color="#637381"
                 style={{ padding: "5px", width: rem(35), height: rem(35) }}
@@ -132,7 +128,7 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
       <div className={classes.section}>
         <Group className={classes.collectionsHeader} justify="space-between">
           <Text size="xs" fw={500} c="dimmed">
-            All Chats
+            All Groups
           </Text>
         </Group>
         <ScrollArea h={790} type="scroll" scrollHideDelay={500}>
@@ -146,7 +142,7 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
                 onExportPdf={() => {
                   handleExportPdf(chat.id);
                 }}
-                onClick={() => onChatClick(chat)}
+                onClick={() => onGroupClick(chat)}
               />
             ))}
           </Group>
@@ -156,10 +152,10 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
         opened={opened}
         onClose={close}
         size={"xl"}
-        title={"Create Chat"}
+        title={"Create Group Chat"}
         centered
       >
-        <AddChat
+        <AddGroup
           onChatCreated={() => {
             close();
             fetchChats();
@@ -170,4 +166,4 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
   );
 };
 
-export default ChatList;
+export default GroupList;

@@ -14,6 +14,12 @@ export interface StartChatRequest {
   contactId: string;
 }
 
+export interface CreateGroupChatRequest {
+  adminId: string;
+  groupName: string;
+  memberIds: string[];
+}
+
 export interface SendMessageResponseDto {
     id: string;
     content: string;

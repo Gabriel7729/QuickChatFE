@@ -19,13 +19,12 @@ import { getRandomColorHex } from "../../../../common/utils/color.utils";
 import { getFirstLetter } from "../../../../common/utils/utils";
 import { IconSend, IconMoodSmile, IconSearch } from "@tabler/icons-react";
 import Picker from "emoji-picker-react";
-import classes from "./ChatMessages.module.css";
+import classes from "./GroupMessages.module.css";
 import {
   HttpTransportType,
   HubConnectionBuilder,
 } from "@microsoft/signalr";
 import { getDateLabel } from "../../../../common/utils/date.utils";
-import { MessagesByDate } from "./MessageByDate";
 import { SERVER_ROUTE } from "../../../../common/constants/serverRoute.constant";
 import {
   ChatResponseDto,
@@ -34,16 +33,14 @@ import {
 } from "../../../../models/chat/chat.model";
 import chatService from "../../../../services/chat/chat.service";
 import { useAuthStore } from "../../../../common/store/session.store";
+import { GroupMessageByDate } from "./GroupMessageByDate";
 
-const AvatarChatLetter: React.FC<ChatMessagesProps> = memo(
+const AvatarChatLetter: React.FC<GroupMessagesProps> = memo(
   ({ chat }) => {
-    const { claims } = useAuthStore();
-    const chatName = chat.participants.find(
-      (user) => user.id !== claims?.userId!
-    )!;
+    const chatName = chat.groupName;
     return (
       <Avatar color={getRandomColorHex()} radius="xl">
-        {getFirstLetter(chatName.name + " " + chatName.lastName)}
+        {getFirstLetter(chatName)}
       </Avatar>
     );
   },
@@ -71,16 +68,17 @@ const groupMessagesByDate = (
 interface ChatMessage {
   text: string;
   time: Date;
+  senderName: string;
   isUserMessage: boolean;
   type: "text" | "media";
   mediaUrl?: string;
 }
 
-interface ChatMessagesProps {
+interface GroupMessagesProps {
   chat: ChatResponseDto;
 }
 
-export const ChatMessages: React.FC<ChatMessagesProps> = ({ chat }) => {
+export const GroupMessages: React.FC<GroupMessagesProps> = ({ chat }) => {
   const [message, setMessage] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
@@ -90,10 +88,6 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ chat }) => {
   }>({});
 
   const { claims } = useAuthStore();
-  const chatName = chat.participants.find(
-    (user) => user.id !== claims?.userId!
-  )!;
-
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
   const formatMessages = (
@@ -102,6 +96,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ chat }) => {
     return messages.map((message) => ({
       text: message.content,
       time: message.timestamp,
+      senderName: chat.participants.find((p) => p.id === message.senderId)?.name || 'Unknown',
       isUserMessage: message.senderId === claims?.userId!,
       type: "text",
     }));
@@ -175,7 +170,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ chat }) => {
 
               <div style={{ flex: 1 }}>
                 <Text size="sm" fw={500}>
-                  {chatName.name + " " + chatName.lastName}
+                  {chat.groupName}
                 </Text>
 
                 <Text c="dimmed" size="xs">
@@ -217,7 +212,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ chat }) => {
         <ScrollArea style={{ height: "100%" }} viewportRef={scrollRef}>
           <Box p="md">
             {Object.keys(messages).map((date) => (
-              <MessagesByDate
+              <GroupMessageByDate
                 key={date}
                 date={date}
                 messages={messages[date]}
@@ -267,4 +262,4 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ chat }) => {
   );
 };
 
-export default ChatMessages;
+export default GroupMessages;
