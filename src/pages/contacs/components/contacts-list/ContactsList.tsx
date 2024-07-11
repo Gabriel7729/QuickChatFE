@@ -50,10 +50,6 @@ export const ContactsList: React.FC<ContactsListProps> = ({
     fetchContacts();
   }, []);
 
-  const handleMenuClick = () => {
-    console.log("Menu clicked");
-  };
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
@@ -115,7 +111,6 @@ export const ContactsList: React.FC<ContactsListProps> = ({
                 key={contact.id}
                 name={contact.name + " " + contact.lastName}
                 message={contact.email}
-                onMenuClick={handleMenuClick}
                 onClick={() => onContactClick(contact)}
               />
             ))}

@@ -18,6 +18,7 @@ import chatService from "../../../../services/chat/chat.service";
 import { useAuthStore } from "../../../../common/store/session.store";
 import AddChat from "../add-chat/AddChat";
 import { useDisclosure } from "@mantine/hooks";
+import { useQuery } from "../../../../common/utils/route.utils";
 
 interface ChatListProps {
   onChatClick: (chat: ChatResponseDto) => void;
@@ -28,6 +29,9 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
   const [chats, setChats] = useState<ChatResponseDto[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const { claims } = useAuthStore();
+
+  const query = useQuery();
+  const contactId = query.get("contactId");
 
   const fetchChats = async () => {
     try {
@@ -42,8 +46,32 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
     fetchChats();
   }, []);
 
-  const handleMenuClick = () => {
-    console.log("Menu clicked");
+  useEffect(() => {
+    if (contactId) {
+      const chat = chats.find((chat) =>
+        chat.participants.some((user) => user.id === contactId)
+      );
+      if (chat) {
+        onChatClick(chat);
+      }
+    }
+  }, [setChats, query, contactId, chats]);
+
+  const handleExportPdf = async (chatId: string) => {
+    try {
+      const response = await chatService.exportChatToPdf(chatId);
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement("a");
+      link.href = url;
+      const chatName = chats
+        .find((chat) => chat.id === chatId)
+        ?.participants.find((user) => user.id !== claims?.userId!)?.name;
+      link.setAttribute("download", `Chat-${chatName}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error("There was an error exporting the chat to pdf", error);
+    }
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,7 +142,10 @@ export const ChatList: React.FC<ChatListProps> = ({ onChatClick }) => {
                 key={chat.id}
                 name={getChatName(chat)}
                 message={chat.lastMessage}
-                onMenuClick={handleMenuClick}
+                onMenuClick={() => {}}
+                onExportPdf={() => {
+                  handleExportPdf(chat.id);
+                }}
                 onClick={() => onChatClick(chat)}
               />
             ))}

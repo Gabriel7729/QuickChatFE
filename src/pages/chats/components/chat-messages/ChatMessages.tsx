@@ -116,7 +116,6 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ chat }) => {
             skipNegotiation: true,
             transport: HttpTransportType.WebSockets,
           })
-          .configureLogging(LogLevel.Information)
           .build();
 
         connection.on("ReceiveMessages", (messages) => {
@@ -124,7 +123,6 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ chat }) => {
         });
 
         await connection.start();
-        console.log("SignalR connection established.");
 
         const request = {
           ChatId: chat.id, // Replace with actual ChatId
@@ -139,7 +137,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ chat }) => {
     }
 
     start();
-  }, [filterKeyword]);
+  }, [filterKeyword, chat.id]);
 
   useEffect(() => {
     if (scrollRef.current) {

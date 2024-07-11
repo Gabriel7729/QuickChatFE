@@ -4,9 +4,10 @@ import {
   Avatar,
   Text,
   rem,
-  Tooltip,
+  ActionIcon,
+  Menu,
 } from "@mantine/core";
-import { IconDotsVertical } from "@tabler/icons-react";
+import { IconDotsVertical, IconPdf } from "@tabler/icons-react";
 import classes from "./UserButton.module.css";
 import { getFirstLetter } from "../../common/utils/utils";
 import { getRandomColorHex } from "../../common/utils/color.utils";
@@ -32,7 +33,8 @@ const AvatarChatLetter: React.FC<AvatarChatLetterProps> = memo(
 interface UserButtonProps {
   name: string;
   message: string;
-  onMenuClick: () => void;
+  onMenuClick?: () => void;
+  onExportPdf?: () => void;
   onClick?: () => void;
 }
 
@@ -40,6 +42,7 @@ export function UserButton({
   name,
   message,
   onMenuClick,
+  onExportPdf,
   onClick,
 }: Readonly<UserButtonProps>) {
   return (
@@ -56,19 +59,48 @@ export function UserButton({
             {message}
           </Text>
         </div>
-
-        <UnstyledButton className="action" onClick={onMenuClick}>
-          <Tooltip
-            label="Options"
-            position="right"
-            transitionProps={{ duration: 0 }}
+        {onMenuClick && (
+          <Menu
+            withArrow
+            width={150}
+            position="bottom"
+            transitionProps={{ transition: "pop" }}
+            withinPortal
           >
-            <IconDotsVertical
-              style={{ width: rem(14), height: rem(14) }}
-              stroke={1.5}
-            />
-          </Tooltip>
-        </UnstyledButton>
+            <Menu.Target>
+              <ActionIcon
+              style={{border: "none"}}
+                variant="default"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMenuClick();
+                }}
+              >
+                <IconDotsVertical
+                  style={{ width: rem(16), height: rem(16) }}
+                  stroke={1.5}
+                />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>Export</Menu.Label>
+              <Menu.Item
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onExportPdf) onExportPdf();
+              }}
+                leftSection={
+                  <IconPdf
+                    style={{ width: rem(16), height: rem(16) }}
+                    stroke={1.5}
+                  />
+                }
+              >
+                Export PDF
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        )}
       </Group>
     </UnstyledButton>
   );

@@ -1,3 +1,5 @@
+import { useLocation } from "react-router-dom";
+
 export const matchPath = (routePath: string, currentPath: string): boolean => {
   const routePathParts = routePath.split("/");
   const currentPathParts = currentPath.split("/");
@@ -20,7 +22,7 @@ export const matchPath = (routePath: string, currentPath: string): boolean => {
 
 export const findCurrentRoute = (routes: any[], pathname: string) => {
   for (let route of routes) {
-    const routePathParts = route.path.split("/");
+    const routePathParts = route.link.split("/");
     const pathnameParts = pathname.split("/");
 
     if (routePathParts.length !== pathnameParts.length) {
@@ -44,3 +46,7 @@ export const findCurrentRoute = (routes: any[], pathname: string) => {
   }
   return null;
 };
+
+export function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}

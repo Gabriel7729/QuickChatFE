@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Center,
   Tooltip,
@@ -22,6 +22,7 @@ import { useAuthStore } from "../../common/store/session.store";
 import { getFirstLetter } from "../../common/utils/utils";
 import { MainRoutes } from "../../routes/dashboard-routes/main-router";
 import { useNavigate } from "react-router-dom";
+import { findCurrentRoute } from "../../common/utils/route.utils";
 
 interface NavbarLinkProps {
   icon: typeof IconMessage;
@@ -51,16 +52,26 @@ function NavbarLink({
 
 export function Navbar() {
   const { claims, logout } = useAuthStore();
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState("chats");
   const navigate = useNavigate();
 
-  const links = MainRoutes.map((link, index) => (
+  useEffect(() => {
+    const currentRoute = findCurrentRoute(MainRoutes, location.pathname);
+    if (currentRoute) {
+      const activeIndex = MainRoutes.find(
+        (route) => route.link === currentRoute.link
+      );
+      setActive(activeIndex?.link.replace("/", "") ?? "");
+    }
+  }, [location.pathname]);
+
+  const links = MainRoutes.map((link) => (
     <NavbarLink
       {...link}
       key={link.label}
-      active={index === active}
+      active={link.link.replace("/", "") === active}
       onClick={() => {
-        setActive(index);
+        setActive(link.link.replace("/", ""));
         navigate(link.link); // Navigate to the specific route
       }}
     />
@@ -86,11 +97,6 @@ export function Navbar() {
         </Center>
       </div>
 
-      {/* <Center>
-        <Avatar size={"50"} color="blue" radius="xl">
-          {getFirstLetter(claims?.name ?? "")}
-        </Avatar>
-      </Center> */}
       <Group justify="center">
         <Menu
           withArrow
@@ -100,12 +106,18 @@ export function Navbar() {
           withinPortal
         >
           <Menu.Target>
-            <Avatar size={"50"} color="blue" radius="xl">
+            <Avatar
+              size={"50"}
+              color="blue"
+              radius="xl"
+              style={{ cursor: "pointer" }}
+            >
               {getFirstLetter(claims?.name ?? "")}
             </Avatar>
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
+              onClick={() => navigate("/settings")}
               rightSection={
                 <IconChevronRight
                   style={{ width: rem(16), height: rem(16) }}
@@ -131,17 +143,8 @@ export function Navbar() {
 
             <Menu.Label>Settings</Menu.Label>
             <Menu.Item
-              leftSection={
-                <IconSettings
-                  style={{ width: rem(16), height: rem(16) }}
-                  stroke={1.5}
-                />
-              }
-            >
-              Account settings
-            </Menu.Item>
-            <Menu.Item
               onClick={handleLogout}
+              color="red"
               leftSection={
                 <IconLogout
                   style={{ width: rem(16), height: rem(16) }}

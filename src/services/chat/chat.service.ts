@@ -1,5 +1,6 @@
 import { ResponseListModel, ResponseModel } from "../../models/base.model";
 import { ChatResponseDto, SendMessageRequest, SendMessageResponseDto, StartChatRequest } from "../../models/chat/chat.model";
+import { GroupResponseDto } from "../../models/chat/group.model";
 import BaseService from "../base.service";
 
 class ChatService extends BaseService<ChatResponseDto> {
@@ -16,6 +17,16 @@ class ChatService extends BaseService<ChatResponseDto> {
     return res.data;
   }
 
+  public async getGroupsInCommon(
+    userId: string,
+    contactId: string
+  ): Promise<ResponseListModel<GroupResponseDto>> {
+    const res = await this.api.get<ResponseListModel<GroupResponseDto>>(
+      `/User/${userId}/Contact/${contactId}/CommonGroups`
+    );
+    return res.data;
+  }
+
   public async startChat(
     request: StartChatRequest
   ): Promise<ResponseModel<ChatResponseDto>> {
@@ -27,6 +38,17 @@ class ChatService extends BaseService<ChatResponseDto> {
     request: SendMessageRequest
   ): Promise<ResponseModel<SendMessageResponseDto>> {
     const res = await this.api.post<ResponseModel<SendMessageResponseDto>>(`/SendMessage`, request);
+    return res.data;
+  }
+
+  public async exportChatToPdf(chatId: string): Promise<Blob> {
+    const res = await this.api.post<Blob>(
+      `/${chatId}/Messages/Report`,
+      {},
+      {
+        responseType: "blob",
+      }
+    );
     return res.data;
   }
 }

@@ -20,3 +20,9 @@ export interface ChangePasswordDto {
   newPassword: string;
   confirmNewPassword: string;
 }
+
+export interface ChangePasswordDto {
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
