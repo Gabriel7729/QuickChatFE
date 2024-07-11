@@ -3,6 +3,7 @@ import Unauthorized from "../pages/login";
 import PrivateRoutes from "./private-routes/private-routes";
 import PublicRoutes from "./public-routes/public-routes";
 import DashboardRoutes from "./dashboard-routes/dashboard-routes";
+import OtpValidationPage from "../pages/validations/OtpValidationPage";
 
 export const AppRouter = () => {
   return (
@@ -15,6 +16,13 @@ export const AppRouter = () => {
           </PublicRoutes>
         }
       />
+
+      <Route
+      path="/validate/email/otp"
+      element={
+          <OtpValidationPage />
+        }
+       />
 
       <Route
         path="/*"

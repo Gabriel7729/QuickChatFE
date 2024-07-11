@@ -8,6 +8,7 @@ export type AuthUser = {
 
 export type AuthUserActions = {
   setClaims: (claims: LoginResponse) => void;
+  setEmailValidated: () => void;
   logout: () => void;
 };
 
@@ -20,9 +21,20 @@ type PersistState = (
 
 export const useAuthStore = create<State>(
   (persist as PersistState)(
-    (set) => ({
+    (set, get) => ({
       claims: null,
       setClaims: (claims: LoginResponse) => set({ claims }),
+      setEmailValidated: () => {
+        const currentClaims = get().claims;
+        if (currentClaims) {
+          set({
+            claims: {
+              ...currentClaims,
+              isEmailValidated: true,
+            },
+          });
+        }
+      },
       logout: () => set({ claims: null }),
     }),
     {

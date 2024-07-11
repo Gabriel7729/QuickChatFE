@@ -16,6 +16,7 @@ import { useState } from "react";
 import authService from "../../services/auth/auth.service";
 import { useAuthStore } from "../../common/store/session.store";
 import { useNavigate } from "react-router-dom";
+import { getCookieValue } from "../../common/utils/utils";
 
 export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -44,8 +45,17 @@ export const LoginForm = () => {
         email: values.email,
         password: values.password,
       });
+      
       setClaims(data.value);
-      navigate("/");
+      
+      const notValidateEmailForNow = getCookieValue("notValidateEmailForNow");
+      if (!data.value.isEmailValidated && notValidateEmailForNow === "false") {
+        navigate("/chats");
+      } else if (!data.value.isEmailValidated) {
+        navigate("/validate/email/otp");
+      } else {
+        navigate("/chats");
+      }
     } catch (error: any) {
       console.error("Login error:", error);
       setIsLoading(false);
@@ -54,7 +64,13 @@ export const LoginForm = () => {
     }
   };
 
-  const handleSignup = async (values: { email: string; password: string; name: string; lastName: string; phoneNumber: string }) => {
+  const handleSignup = async (values: {
+    email: string;
+    password: string;
+    name: string;
+    lastName: string;
+    phoneNumber: string;
+  }) => {
     try {
       setIsLoading(true);
       const data = await authService.signUp({
@@ -75,12 +91,18 @@ export const LoginForm = () => {
   };
 
   return (
-    <Box style={{ width: "100%", maxWidth: '520px', margin: 'auto' }}>
+    <Box style={{ width: "100%", maxWidth: "520px", margin: "auto" }}>
       <Title ta="center">Welcome to QuickChat</Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
-        {isSignup ? 'Already have an account? ' : 'Do not have an account yet? '}
-        <Anchor size="sm" component="button" onClick={() => setIsSignup(!isSignup)}>
-          {isSignup ? 'Sign in' : 'Create account'}
+        {isSignup
+          ? "Already have an account? "
+          : "Do not have an account yet? "}
+        <Anchor
+          size="sm"
+          component="button"
+          onClick={() => setIsSignup(!isSignup)}
+        >
+          {isSignup ? "Sign in" : "Create account"}
         </Anchor>
       </Text>
 
@@ -134,7 +156,13 @@ export const LoginForm = () => {
             </Group>
           )}
           <Button fullWidth mt="xl" type="submit" disabled={isLoading}>
-            {isLoading ? <Loader size="sm" /> : isSignup ? "Sign up" : "Sign in"}
+            {isLoading ? (
+              <Loader size="sm" />
+            ) : isSignup ? (
+              "Sign up"
+            ) : (
+              "Sign in"
+            )}
           </Button>
         </form>
       </Paper>

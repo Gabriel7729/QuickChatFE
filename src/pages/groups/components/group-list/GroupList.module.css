@@ -1,7 +1,8 @@
 .GroupList {
     background-color: #F8FAFF;
     height: 100vh;
-    width: rem(350px);
+    width: 100%;
+    max-width: rem(350px);
     padding: var(--mantine-spacing-md);
     padding-top: 0;
     display: flex;

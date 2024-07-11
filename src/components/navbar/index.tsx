@@ -11,6 +11,8 @@ import {
   Menu,
 } from "@mantine/core";
 import {
+  IconAlertTriangle,
+  IconCheck,
   IconChevronRight,
   IconLogout,
   IconMessage,
@@ -131,7 +133,30 @@ export function Navbar() {
                 </Avatar>
 
                 <div>
-                  <Text fw={500}>{claims?.name + " " + claims?.lastName}</Text>
+                  <Text fw={500}>
+                    {claims?.name + " " + claims?.lastName}
+                    {claims?.isEmailValidated ? (
+                      <IconCheck
+                        style={{
+                          width: rem(16),
+                          height: rem(16),
+                          marginLeft: rem(8),
+                          color: "green",
+                        }}
+                        stroke={1.5}
+                      />
+                    ) : (
+                      <IconAlertTriangle
+                        style={{
+                          width: rem(16),
+                          height: rem(16),
+                          marginLeft: rem(8),
+                          color: "red",
+                        }}
+                        stroke={1.5}
+                      />
+                    )}
+                  </Text>
                   <Text size="xs" c="dimmed">
                     {claims?.email ?? ""}
                   </Text>

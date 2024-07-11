@@ -65,3 +65,11 @@ export const printInvoice = (file: Blob) => {
   window.open(url)?.print();
   URL.revokeObjectURL(url);
 };
+
+export const getCookieValue = (name: string) => {
+  const match = RegExp(new RegExp("(^| )" + name + "=([^;]+)")).exec(
+    document.cookie
+  );
+  if (match) return match[2];
+  return null;
+};

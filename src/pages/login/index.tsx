@@ -1,4 +1,4 @@
-import { Box, Center } from "@mantine/core";
+import { Center } from "@mantine/core";
 import LoginForm from "./LoginForm";
 
 export const Unauthorized = () => {

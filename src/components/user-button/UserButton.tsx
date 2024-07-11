@@ -1,10 +1,8 @@
 import {
-  UnstyledButton,
   Group,
   Avatar,
   Text,
   rem,
-  ActionIcon,
   Menu,
 } from "@mantine/core";
 import { IconDotsVertical, IconPdf } from "@tabler/icons-react";
@@ -46,7 +44,7 @@ export function UserButton({
   onClick,
 }: Readonly<UserButtonProps>) {
   return (
-    <UnstyledButton className={classes.user} onClick={onClick}>
+    <div className={classes.user} onClick={onClick} style={{ cursor: 'pointer' }}>
       <Group>
         <AvatarChatLetter name={name} />
 
@@ -68,27 +66,26 @@ export function UserButton({
             withinPortal
           >
             <Menu.Target>
-              <ActionIcon
-              style={{border: "none"}}
-                variant="default"
+              <div
                 onClick={(e) => {
                   e.stopPropagation();
                   onMenuClick();
                 }}
+                style={{ display: 'inline-flex', alignItems: 'center' }}
               >
                 <IconDotsVertical
-                  style={{ width: rem(16), height: rem(16) }}
+                  style={{ width: rem(16), height: rem(16), cursor: 'pointer' }}
                   stroke={1.5}
                 />
-              </ActionIcon>
+              </div>
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>Export</Menu.Label>
               <Menu.Item
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onExportPdf) onExportPdf();
-              }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onExportPdf) onExportPdf();
+                }}
                 leftSection={
                   <IconPdf
                     style={{ width: rem(16), height: rem(16) }}
@@ -102,6 +99,6 @@ export function UserButton({
           </Menu>
         )}
       </Group>
-    </UnstyledButton>
+    </div>
   );
 }
